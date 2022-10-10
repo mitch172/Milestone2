@@ -18,7 +18,6 @@ app.config['MYSQL_DB'] = 'Milestone_2'
 mysql = MySQL(app)
 
 # http://localhost:5000/pythonlogin/ - this will be the login page, we need to use both GET and POST requests
-
 @app.route('/', methods=['GET', 'POST'])
 def userLogin():
     # Output message if something goes wrong...
@@ -48,6 +47,7 @@ def userLogin():
     return render_template('index.html', msg=msg)
 
 
+# http://localhost:5000/pythonlogin/ - this will be the login page, we need to use both GET and POST requests
 @app.route('/', methods=['GET', 'POST'])
 def adminLogin():
     # Output message if something goes wrong...
@@ -159,24 +159,24 @@ def adminRegister():
     return render_template('register.html', msg=msg)
 
 
-# http://localhost:5000/pythinlogin/home - this will be the home page, only accessible for loggedin users
+# http://localhost:5000/pythinlogin/userHome - this will be the home page, only accessible for loggedin users
 @app.route('/pythonlogin/home')
 def userHome():
     # Check if user is loggedin
     if 'loggedin' in session:
         # User is loggedin show them the home page
-        return render_template('home.html', username=session['username'])
+        return render_template('userHome.html', username=session['username'])
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
 
 
-# http://localhost:5000/pythinlogin/home - this will be the home page, only accessible for loggedin users
+# http://localhost:5000/pythinlogin/adminHome - this will be the home page, only accessible for loggedin admins
 @app.route('/pythonlogin/home')
 def adminHome():
     # Check if user is loggedin
     if 'loggedin' in session:
         # User is loggedin show them the home page
-        return render_template('home.html', username=session['username'])
+        return render_template('adminHome.html', username=session['username'])
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
 
@@ -185,7 +185,7 @@ def adminHome():
 def addItem():
     # Output message if something goes wrong...
     msg = ''
-    # Check if "brand", "name", "releaseDate" and "discNumber" POST requests exist (user submitted form)
+    # Check if "brand", "name", "releaseDate", "discNumber", "abbreviation", and "cost" POST requests exist (user submitted form)
     if request.method == 'POST' and 'brand' in request.form and 'name' in request.form and 'release_date' in request.form and 'disc_number' in request.form and 'abbreviation' in request.form and 'cost' in request.form:
         # Create variables for easy access
         brand = request.form['brand']
