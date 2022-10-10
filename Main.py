@@ -147,7 +147,7 @@ def adminRegister():
             msg = 'Please fill out the form!'
         else:
             # Account doesnt exists and the form data is valid, now insert new account into accounts table
-            cursor.execute('INSERT INTO Admin (email, password) VALUES ( %s, %s, %s)', (email, password,))
+            cursor.execute('INSERT INTO Admin (email, password) VALUES ( %s, %s)', (email, password,))
             mysql.connection.commit()
             msg = 'You have successfully registered!'
 
@@ -196,7 +196,7 @@ def addItem():
             msg = 'Please fill out the form!'
         else:
             # Item doesnt exists and the form data is valid, now insert new item into items table
-            cursor.execute('INSERT INTO Item (brand, name, release_date, disc_number, abbreviation, cost) VALUES ( %s, %s, %s, %s)', (brand, name, release_date, disc_number, abbreviation, cost,))
+            cursor.execute('INSERT INTO Item (brand, name, release_date, disc_number, abbreviation, cost) VALUES ( %s, %s, %s, %s, %s, %s)', (brand, name, release_date, disc_number, abbreviation, cost,))
             mysql.connection.commit()
             msg = 'Item successfully added'
 
