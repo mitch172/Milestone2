@@ -29,7 +29,7 @@ def userLogin():
         password = request.form['password']
         # Check if account exists using MySQL
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM User WHERE email = %s AND password = %s', (username, password,))
+        cursor.execute('SELECT * FROM User WHERE email = %s AND password = %s', (email, password,))
         # Fetch one record and return result
         account = cursor.fetchone()
         # If account exists in accounts table in out database
@@ -39,7 +39,7 @@ def userLogin():
             session['id'] = account['id']
             session['email'] = account['email']
             # Redirect to home page
-            return redirct(url_for('home'))
+            return redirect(url_for('userHome'))
         else:
             # Account doesnt exist or username/password incorrect
             msg = 'Incorrect username/password!'
@@ -69,7 +69,7 @@ def adminLogin():
             session['id'] = account['id']
             session['email'] = account['email']
             # Redirect to home page
-            return redirct(url_for('home'))
+            return redirect(url_for('adminHome'))
         else:
             # Account doesnt exist or username/password incorrect
             msg = 'Incorrect username/password!'
@@ -84,7 +84,7 @@ def logout():
    session.pop('id', None)
    session.pop('username', None)
    # Redirect to login page
-   return redirect(url_for('login'))
+   return redirect(url_for('userLogin'))
 
 
 # http://localhost:5000/Falsk/register - this will be the registration page, we need to use both GET and POST requests
@@ -97,6 +97,7 @@ def userRegister():
         # Create variables for easy access
         email = request.form['email']
         password = request.form['password']
+        username = request.form['username']
 
         # Check if account exists using MySQL
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -115,43 +116,6 @@ def userRegister():
             mysql.connection.commit()
             msg = 'You have successfully registered!'
 
-
-    elif request.method == 'POST':
-        # Form is empty... (no POST data)
-        msg = 'Please fill out the form!'
-    # Show registration form with message (if any)
-    return render_template('register.html', msg=msg)
-
-
-# http://localhost:5000/Falsk/register - this will be the registration page, we need to use both GET and POST requests
-@app.route('/register', methods=['GET', 'POST'])
-def adminRegister():
-    # Output message if something goes wrong...
-    msg = ''
-    # Check if "username", "password" and "email" POST requests exist (user submitted form)
-    if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form:
-        # Create variables for easy access
-        email = request.form['email']
-        password = request.form['password']
-
-        # Check if account exists using MySQL
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM Admin WHERE email = %s', (email,))
-        account = cursor.fetchone()
-        # If account exists show error and validation checks
-        if account:
-            msg = 'Account already exists!'
-        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-            msg = 'Invalid email address!'
-        elif not username or not password or not email:
-            msg = 'Please fill out the form!'
-        else:
-            # Account doesnt exists and the form data is valid, now insert new account into accounts table
-            cursor.execute('INSERT INTO Admin (email, password) VALUES ( %s, %s)', (email, password,))
-            mysql.connection.commit()
-            msg = 'You have successfully registered!'
-
-
     elif request.method == 'POST':
         # Form is empty... (no POST data)
         msg = 'Please fill out the form!'
@@ -167,21 +131,21 @@ def userHome():
         # User is loggedin show them the home page
         return render_template('userHome.html', username=session['username'])
     # User is not loggedin redirect to login page
-    return redirect(url_for('login'))
+    return redirect(url_for('userLogin'))
 
 
 # http://localhost:5000/pythinlogin/adminHome - this will be the home page, only accessible for loggedin admins
-@app.route('/pythonlogin/home')
+@app.route('/adminHome/home')
 def adminHome():
     # Check if user is loggedin
-    if 'loggedin' in session:
+    #if 'loggedin' in session:
         # User is loggedin show them the home page
-        return render_template('adminHome.html', username=session['username'])
+        return render_template('adminHome.html')
     # User is not loggedin redirect to login page
-    return redirect(url_for('login'))
+    #return redirect(url_for('userLogin'))
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/addItem', methods=['GET', 'POST'])
 def addItem():
     # Output message if something goes wrong...
     msg = ''
@@ -190,44 +154,81 @@ def addItem():
         # Create variables for easy access
         brand = request.form['brand']
         name = request.form['name']
-        releas_date = request.form['release_date']
+        release_date = request.form['release_date']
         disc_number = request.form['disc_number']
         abbreviation = request.form['abbreviation']
         cost = request.form['cost']
 
         # Check if product exists using MySQL
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM Item WHERE name = %s', (name,))
+        cursor.execute('SELECT * FROM Item_t WHERE name = %s', (name,))
         item = cursor.fetchone()
         # If item exists show error and validation checks
         if item:
             msg = 'Item already exists!'
-        else if not re.match(r'[A-Za-z0-9]+', brand):
+        elif not re.match(r'[A-Za-z0-9]+', brand):
             msg = 'Brand must contain only characters and numbers!'
-        else if not re.match(r'[A-Za-z0-9]+', name):
+        elif not re.match(r'[A-Za-z0-9]+', name):
             msg = 'Name must contain only characters and numbers!'
-        else if not re.match(r'[0-9]+', release_date):
+        elif not re.match(r'[0-9]+', release_date):
             msg = 'Release date must contain only numbers!'
-        else if not re.match(r'[0-9]+', disc_number):
-            msg = 'Disc number must contain only numbers!'
-        else if not re.match(r'[A-Za-z0-9]+', abbreviation):
+        #elif not re.match(r'[0-9]+', disc_number):
+         #   msg = 'Disc number must contain only numbers!'
+        elif not re.match(r'[A-Za-z0-9]+', abbreviation):
             msg = 'Abbreviation must contain only characters and numbers!'
-        else if not re.match(r'[0-9]+', cost):
+        elif not re.match(r'[0-9]+', cost):
             msg = 'Cost must contain only numbers!'
-        else if not brand or not name or not release_date or not disc_number:
+        elif not brand or not name or not release_date or not disc_number:
             msg = 'Please fill out the form!'
         else:
             # Item doesnt exists and the form data is valid, now insert new item into items table
-            cursor.execute('INSERT INTO Item (brand, name, release_date, disc_number, abbreviation, cost) VALUES ( %s, %s, %s, %s, %s, %s)', (brand, name, release_date, disc_number, abbreviation, cost,))
+            cursor.execute('INSERT INTO Item_t (brand, name, release_date, disc_number, abbreviation, cost) VALUES ( %s, %s, %s, %s, %s, %s,%s)', (brand, name, release_date,cost, disc_number, abbreviation, cost,))
             mysql.connection.commit()
             msg = 'Item successfully added'
+            #cursor.execute('SELECT * FROM Item_t')
+            cursor.close()
 
-
-    else if request.method == 'POST':
+    elif request.method == 'POST':
         # Form is empty... (no POST data)
         msg = 'Please fill out the form!'
     # Show registration form with message (if any)
-    return render_template('register.html', msg=msg)
+    return render_template('addItem.html', msg=msg)
+
+
+#Commented out as no register page yet
+# @app.route('/register', methods=['GET', 'POST'])
+# def adminRegister():
+    # Output message if something goes wrong...
+  #  msg = ''
+    # Check if "username", "password" and "email" POST requests exist (user submitted form)
+   # if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form:
+        # Create variables for easy access
+    #    email = request.form['email']
+     #   password = request.form['password']
+
+        # Check if account exists using MySQL
+        # cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        # cursor.execute('SELECT * FROM Admin WHERE email = %s', (email,))
+        # account = cursor.fetchone()
+        # If account exists show error and validation checks
+        #if account:
+         #   msg = 'Account already exists!'
+        #elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+          #  msg = 'Invalid email address!'
+       # elif not username or not password or not email:
+           # msg = 'Please fill out the form!'
+      #  else:
+            # Account doesnt exists and the form data is valid, now insert new account into accounts table
+      #      cursor.execute('INSERT INTO Admin (email, password) VALUES ( %s, %s)', (email, password,))
+     #       mysql.connection.commit()
+    #        msg = 'You have successfully registered!'
+
+   # elif request.method == 'POST':
+  #      # Form is empty... (no POST data)
+ #       msg = 'Please fill out the form!'
+    # Show registration form with message (if any)
+#    return render_template('register.html', msg=msg)
+
 
 
 if __name__ == '__main__':
