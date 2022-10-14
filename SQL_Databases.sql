@@ -8,6 +8,8 @@ create table User_t
     -> constraint User_PK primary key(ID)
     -> );
 
+    -> ALTER TABLE User_t MODIFY COLUMN ID INT auto_increment
+
 create table Item_t
     -> (
     -> Brand varchar(15) not null,
