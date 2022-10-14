@@ -34,7 +34,6 @@ def userLogin():
     # Output message if something goes wrong...
     msg = ''
     # Check if "email" and "password" POST requests exist (user submitted form)
-    """
     if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
         # Create variables for easy access
         email = request.form['email']
@@ -55,7 +54,6 @@ def userLogin():
         else:
             # Account doesnt exist or username/password incorrect
             msg = 'Incorrect username/password!'
-            """
     # Show the login form with message (if any)
     return render_template('login.html', msg=msg)
 
@@ -66,7 +64,6 @@ def adminLogin():
     # Output message if something goes wrong...
     msg = ''
     # Check if "email" and "password" POST requests exist (user submitted form)
-    """
     if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
         # Create variables for easy access
         email = request.form['email']
@@ -87,7 +84,6 @@ def adminLogin():
         else:
             # Account doesnt exist or username/password incorrect
             msg = 'Incorrect username/password!'
-            """
     # Show the login form with message (if any)
     return render_template('index.html', msg=msg)
 
