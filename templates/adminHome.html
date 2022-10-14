@@ -1,8 +1,17 @@
+<html>
 {% extends 'layout.html' %}
-
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<h2>Home Page</h2>
-<p>Welcome back, {{ username }}!</p>
+ <div class="topnav">
+  <a href="{{ url_for('Home') }}">Home</a>
+  <a href="{{ url_for('userLogin') }}">Login/Register</a>
+  <a href="{{ url_for('adminHome') }}" class="active">Admin</a>
+  <a href="#about">About</a>
+</div>
+
+<h2 class="h2">Hello, Admin ;)</h2>
+<p>Welcome to your Admin Page!</p>
+<a href="{{ url_for('addItem') }}"><button type="button">Add Item</button></a>
 {% endblock %}
+</html>

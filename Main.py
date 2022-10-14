@@ -15,14 +15,26 @@ app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_DB'] = 'Milestone_2'
 
 # Intialize MySQL
-mysql = MySQL(app)
+#mysql = MySQL(app)
+
+
+@app.route('/', methods=['GET', 'POST'])
+def Home():
+    return render_template('index.html')
+
+
+@app.route('/', methods=['GET', 'POST'])
+def Contact():
+    return render_template('index.html')
+
 
 # http://localhost:5000/pythonlogin/ - this will be the login page, we need to use both GET and POST requests
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def userLogin():
     # Output message if something goes wrong...
     msg = ''
     # Check if "email" and "password" POST requests exist (user submitted form)
+    """
     if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
         # Create variables for easy access
         email = request.form['email']
@@ -43,16 +55,18 @@ def userLogin():
         else:
             # Account doesnt exist or username/password incorrect
             msg = 'Incorrect username/password!'
+            """
     # Show the login form with message (if any)
-    return render_template('index.html', msg=msg)
+    return render_template('login.html', msg=msg)
 
 
 # http://localhost:5000/pythonlogin/ - this will be the login page, we need to use both GET and POST requests
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/adminlogin', methods=['GET', 'POST'])
 def adminLogin():
     # Output message if something goes wrong...
     msg = ''
     # Check if "email" and "password" POST requests exist (user submitted form)
+    """
     if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
         # Create variables for easy access
         email = request.form['email']
@@ -73,6 +87,7 @@ def adminLogin():
         else:
             # Account doesnt exist or username/password incorrect
             msg = 'Incorrect username/password!'
+            """
     # Show the login form with message (if any)
     return render_template('index.html', msg=msg)
 

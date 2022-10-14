@@ -3,6 +3,13 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+ <div class="topnav">
+  <a href="{{ url_for('Home') }}" class="active">Home</a>
+  <a href="{{ url_for('userLogin') }}">Login/Register</a>
+  <a href="{{ url_for('adminHome') }}">Admin</a>
+  <a href="#about">About</a>
+</div>
 <h2>Home Page</h2>
+
 <p>Welcome back, {{ username }}!</p>
 {% endblock %}
